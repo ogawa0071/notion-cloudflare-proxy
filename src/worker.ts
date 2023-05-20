@@ -1,7 +1,7 @@
 export default {
   async fetch(request: Request) {
     const url = new URL(request.url);
-    const _url = new URL('https://notion.notion.site' + url.pathname);
+    const _url = new URL('https://www.notion.so' + url.pathname + url.search);
 
     const response = await fetch(_url, request);
 
@@ -11,7 +11,11 @@ export default {
       return new Response(JSON.stringify(json), response);
     }
 
-    return new HTMLRewriter().on('body', new ElementHandler(url.hostname)).transform(response);
+    const _body = new HTMLRewriter().on('body', new ElementHandler(url.hostname)).transform(response).body;
+    return new Response(_body, {
+      ...response,
+      status: response.status === 404 && response.headers.get('content-type')?.includes('text/html') ? 200 : response.status,
+    });
   },
 };
 
