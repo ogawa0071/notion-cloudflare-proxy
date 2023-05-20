@@ -1,7 +1,7 @@
 const HOME_ID = '';
 
 export default {
-  async fetch(request: Request) {
+  async fetch(request: Request): Promise<Response> {
     const url = new URL(request.url);
     const _url = new URL('https://www.notion.so' + url.pathname + url.search);
 
