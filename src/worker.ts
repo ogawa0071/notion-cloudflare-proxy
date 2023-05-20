@@ -1,7 +1,13 @@
+const HOME_ID = '';
+
 export default {
   async fetch(request: Request) {
     const url = new URL(request.url);
     const _url = new URL('https://www.notion.so' + url.pathname + url.search);
+
+    if (url.pathname === '/') {
+      return Response.redirect(new URL(url.pathname + HOME_ID, url).toString(), 308);
+    }
 
     const response = await fetch(_url, request);
 
