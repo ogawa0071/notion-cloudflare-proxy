@@ -1,12 +1,14 @@
-const HOME_ID = '';
+export interface Env {
+  HOME_ID: string;
+}
 
 export default {
-  async fetch(request: Request): Promise<Response> {
+  async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
     const _url = new URL(`https://www.notion.so${url.pathname}${url.search}`);
 
     if (url.pathname === '/') {
-      return Response.redirect(new URL(`/${HOME_ID}`, url).toString(), 308);
+      return Response.redirect(new URL(`/${env.HOME_ID}`, url).toString(), 308);
     }
 
     const response = await fetch(_url, request);
