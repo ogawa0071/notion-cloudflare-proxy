@@ -31,7 +31,10 @@ export default {
       try {
         responseBody.recordMap.site = Object.fromEntries(
           Object.entries(responseBody.recordMap.site).map(([key, value]) => {
-            value.value.value.header.hideWatermark = true;
+            value.value.value.header = {
+              ...value.value.value.header,
+              hideWatermark: true,
+            };
             return [key, value];
           })
         );
