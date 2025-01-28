@@ -8,7 +8,12 @@ export default {
     const _url = new URL(url);
     _url.hostname = env.NOTION_DOMAIN;
 
-    if (request.method === 'POST' && url.pathname === '/api/v3/getPublicPageData') {
+    // `/`: https://www.kotharifellowship.com/api/v3/getPublicPageDataForDomain
+    // `/[pageId]`: https://www.kotharifellowship.com/api/v3/getPublicPageData
+    if (
+      request.method === 'POST' &&
+      (url.pathname === '/api/v3/getPublicPageData' || url.pathname === '/api/v3/getPublicPageDataForDomain')
+    ) {
       const requestBody = await request.json<Record<string, any>>();
       requestBody.requestedOnExternalDomain = false;
       requestBody.spaceDomain = env.NOTION_DOMAIN.replace('.notion.site', '');
@@ -24,7 +29,9 @@ export default {
       return new Response(JSON.stringify(responseBody), response);
     }
 
-    if (request.method === 'POST' && url.pathname === '/api/v3/syncRecordValues') {
+    // `/`: https://www.kotharifellowship.com/api/v3/syncRecordValues
+    // `/[pageId]`: https://www.kotharifellowship.com/api/v3/syncRecordValuesSpace
+    if (request.method === 'POST' && url.pathname.startsWith('/api/v3/syncRecordValues')) {
       const response = await fetch(_url, request);
       const responseBody = await response.json<{ recordMap: { site: Record<string, any>; public_domain: Record<string, any> } }>();
 
